@@ -5,6 +5,9 @@ const controller=require("../controller/user.controller")
 
 router.post("/",controller.store)
 router.get("/",controller.index)
+router.get("/:id",controller.get)
+router.delete("/:id",controller.destroy)
+router.put("/:id",controller.update)
 
 
 
