@@ -1,6 +1,7 @@
 const User=require("../models/User.model")
 const bcrypt=require("bcryptjs")
-
+var jwt = require('jsonwebtoken');
+const JWT_SECRET="Arsl"
 
 
 exports.store=async(req,res)=>{
@@ -17,7 +18,26 @@ exports.store=async(req,res)=>{
         console.log(err)
     }
    }
-
+exports.login=async(req,res)=>{
+try{
+const {email,password}=req.body;
+const user = await User.findOne({email})
+if(user === null){
+    return res.json({message:"user not found"})
+}
+const isPasswordMatched=await bcrypt.compare(password,user.password)
+if(isPasswordMatched){
+  const token=jwt.sign({id:user._id},JWT_SECRET)
+  return res.json({message:"user logged in successfully",accessToken:token})
+}
+else{
+    return res.json({message:"password does not matched"})
+}
+}
+catch(err){
+    console.log(err)
+}
+}
 
    exports.index=async(req,res)=>{
     try{
